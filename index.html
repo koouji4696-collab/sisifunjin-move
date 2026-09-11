@@ -1,0 +1,1218 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>獅子奮迅 ― 明星剣道部 動画解析</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@500;700;800&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --kon:#1B2A4A;      /* 紺：剣道着 */
+  --kon-deep:#111C33;
+  --shiro:#FBFAF7;    /* 白：面手ぬぐい */
+  --kinu:#EFEBE2;     /* 生成り */
+  --shu:#8E1B1F;      /* 旗の臙脂 */
+  --shu-light:#F2DFDD;
+  --sumi:#22242A;
+  --hai:#6B7080;
+  --line:#D8D3C7;
+  --ok:#2E6B45;
+  --ok-light:#DDEBE1;
+  --radius:6px;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--shiro);color:var(--sumi);font-family:'Noto Sans JP',system-ui,sans-serif;font-size:15px;line-height:1.7}
+h1,h2,h3,.mincho{font-family:'Shippori Mincho B1','Noto Serif JP',serif}
+h2{font-size:20px;font-weight:700;margin:0 0 4px;color:var(--kon)}
+h3{font-size:16px;font-weight:700;margin:0 0 6px;color:var(--kon)}
+p{margin:0 0 8px}
+button{font-family:inherit;font-size:15px;cursor:pointer}
+input,select,textarea{font-family:inherit;font-size:15px;color:var(--sumi);border:1px solid var(--line);border-radius:var(--radius);padding:8px 10px;background:#fff;width:100%}
+textarea{min-height:72px;resize:vertical}
+input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid var(--shu);outline-offset:2px}
+.note{font-size:13px;color:var(--hai)}
+.hint{font-size:12px;color:var(--hai);margin-top:2px}
+
+/* 垂ネーム風のヘッダー */
+header{position:relative;color:#fff;padding:26px 16px 20px;background:var(--kon-deep) url(dojo.jpg) center 35%/cover no-repeat;isolation:isolate}
+header::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(17,28,51,.55),rgba(17,28,51,.88));z-index:-1}
+.head-inner{max-width:760px;margin:0 auto;display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center}
+.head-title{font-family:'Shippori Mincho B1',serif;font-size:38px;font-weight:800;letter-spacing:.14em;
+  color:#fff;text-shadow:0 2px 14px rgba(0,0,0,.6);padding:0 0 6px;border-bottom:2px solid rgba(255,255,255,.5);line-height:1.1}
+.head-text{min-width:0}
+.head-text .school{font-size:13px;color:#C9D0DE;letter-spacing:.1em}
+.head-text .title{font-family:'Shippori Mincho B1',serif;font-size:22px;font-weight:700;margin:2px 0 6px}
+.head-text .privacy{font-size:12px;color:#C9D0DE;line-height:1.5}
+.head-text .privacy b{color:#fff;font-weight:500}
+
+main{max-width:760px;margin:0 auto;padding:0 14px 80px}
+.tabs{display:flex;gap:0;margin:0 -14px 16px;background:var(--kon-deep);position:sticky;top:0;z-index:20}
+.tabs button{flex:1;background:transparent;border:0;color:#9AA6BF;padding:12px 8px;font-weight:700;border-bottom:3px solid transparent}
+.tabs button.on{color:#fff;border-bottom-color:var(--shu);background:rgba(255,255,255,.06)}
+.pane{display:none}.pane.on{display:block}
+.cfg .field{margin-bottom:12px}
+.cfg textarea{min-height:110px;font-size:14px;line-height:1.6}
+.cfg .what{font-size:12px;color:var(--hai);margin-bottom:3px}
+.locked{text-align:center;padding:26px 12px}
+.locked .mincho{font-size:22px;color:var(--kon);margin-bottom:8px}
+section.step{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:16px 14px;margin-bottom:14px}
+.step-head{display:flex;align-items:baseline;gap:10px;margin-bottom:10px;border-bottom:2px solid var(--kinu);padding-bottom:8px}
+.step-no{font-family:'Shippori Mincho B1',serif;color:var(--shu);font-size:22px;font-weight:800;line-height:1}
+.step-head .opt{font-size:12px;color:var(--hai);margin-left:auto}
+
+/* 動画ドロップ */
+.drop{border:2px dashed var(--kon);border-radius:var(--radius);padding:22px 12px;text-align:center;background:var(--kinu);color:var(--kon)}
+.drop.over{background:var(--shu-light);border-color:var(--shu)}
+.drop input{display:none}
+.drop .big{font-family:'Shippori Mincho B1',serif;font-size:18px;font-weight:700}
+.drop label{display:inline-block;margin-top:8px;background:var(--kon);color:#fff;padding:9px 18px;border-radius:var(--radius);cursor:pointer}
+.vcard{border:1px solid var(--line);border-radius:var(--radius);padding:12px;margin-top:12px;background:var(--shiro)}
+.vcard .vhead{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.vcard .vhead .vname{font-weight:700;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.vcard video{width:100%;max-height:260px;background:#000;border-radius:var(--radius)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+.field label{display:block;font-size:13px;color:var(--kon);font-weight:500;margin-bottom:2px}
+.req{color:var(--shu);font-size:12px}
+.frames{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.fr{position:relative;width:calc(25% - 5px);aspect-ratio:16/9;border-radius:4px;overflow:hidden;background:#000;border:2px solid transparent}
+.fr img{width:100%;height:100%;object-fit:cover;display:block}
+.fr.manual{border-color:var(--shu)}
+.fr .t{position:absolute;left:3px;bottom:2px;font-size:10px;color:#fff;background:rgba(0,0,0,.55);padding:0 4px;border-radius:3px}
+.fr .x{position:absolute;right:2px;top:2px;width:20px;height:20px;border-radius:50%;background:rgba(0,0,0,.6);color:#fff;border:0;font-size:12px;line-height:20px;padding:0}
+.fr img{cursor:zoom-in}
+.fr .side{position:absolute;right:2px;bottom:2px;border:0;padding:1px 6px;border-radius:3px;background:var(--kon);color:#fff;font-size:11px;font-weight:700;line-height:1.5}
+.fr .side.off{background:rgba(0,0,0,.5);font-weight:400}
+
+/* 拡大表示 */
+.lb{position:fixed;inset:0;background:rgba(10,12,18,.94);z-index:50;display:none;flex-direction:column}
+.lb.show{display:flex}
+.lb-view{flex:1;overflow:hidden;display:flex;align-items:center;justify-content:center;touch-action:none}
+.lb-view img{max-width:100%;max-height:100%;transform-origin:center center;will-change:transform;cursor:grab;user-select:none;-webkit-user-drag:none}
+.lb-bar{background:#000;color:#fff;padding:8px 10px;display:flex;gap:6px;align-items:center;flex-wrap:wrap;justify-content:center}
+.lb-bar .cap{flex:1;min-width:100%;text-align:center;font-size:13px;color:#C9D0DE;order:-1}
+.lb-bar button{background:#fff;color:var(--sumi);border:0;border-radius:var(--radius);padding:8px 14px;font-weight:700}
+.lb-bar button.g{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.4);font-weight:400}
+.lb-film{display:flex;gap:6px;align-items:center;margin-right:10px}
+/* 見比べ画面 */
+.cw{position:fixed;inset:0;background:#0B0E14;z-index:60;display:none;flex-direction:column;color:#fff}
+.cw.show{display:flex}
+.cw-head{display:flex;align-items:center;gap:8px;padding:8px 10px;background:#000;flex-wrap:wrap}
+.cw-head .ttl{font-family:'Shippori Mincho B1',serif;font-size:16px;font-weight:700}
+.cw-head .sp{flex:1}
+.cw-head button{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.4);border-radius:var(--radius);padding:6px 12px}
+.cw-head button.on{background:#fff;color:var(--sumi);border-color:#fff;font-weight:700}
+.cw-body{flex:1;overflow:auto;padding:10px}
+.cw-side{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.cw-side .col{min-width:0}
+.cw-side h4{margin:0 0 4px;font-size:13px;font-weight:700}
+.cw-side .yours h4{color:#FF8A80}.cw-side .mihon h4{color:#8BD3A4}
+.cw-side img{width:100%;border-radius:4px;background:#000;display:block}
+.cw-stage{position:relative;width:100%;max-width:760px;margin:0 auto;background:#000;border-radius:4px;overflow:hidden}
+.cw-stage img{width:100%;display:block}
+.cw-stage img.top{position:absolute;inset:0;height:100%;object-fit:contain}
+.cw-ctl{max-width:760px;margin:10px auto 0;display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:13px}
+.cw-ctl input[type=range]{flex:1;min-width:140px;width:auto;padding:0;border:0;background:transparent}
+.cw-ctl .lab{color:#C9D0DE;white-space:nowrap}
+.cw-foot{padding:8px 10px;background:#000;display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.cw-foot button{background:#fff;color:var(--sumi);border:0;border-radius:var(--radius);padding:8px 14px;font-weight:700}
+.cw-foot button.g{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.4);font-weight:400}
+@media (max-width:560px){.cw-side{grid-template-columns:1fr}}
+.lb-film.hide{display:none}
+
+/* お手本との違い */
+.gap{border:1px solid var(--line);border-radius:var(--radius);padding:12px;margin-top:10px;background:#fff}
+.gap .pair{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0}
+.gap .pair figure{margin:0}
+.gap .pair img{width:100%;border-radius:4px;background:#000;display:block;cursor:zoom-in}
+.gap .pair figcaption{font-size:12px;font-weight:700;padding:2px 0}
+.gap .pair .mihon figcaption{color:var(--ok)}
+.gap .pair .yours figcaption{color:var(--shu)}
+.gap .line{display:flex;gap:6px;font-size:14px;margin-top:2px}
+.gap .line b{flex:0 0 4.5em;font-weight:500;color:var(--hai);font-size:12px;padding-top:2px}
+.btn{border:1px solid var(--kon);background:#fff;color:var(--kon);padding:8px 14px;border-radius:var(--radius)}
+.btn.primary{background:var(--shu);border-color:var(--shu);color:#fff;font-weight:700}
+.btn.small{font-size:13px;padding:5px 10px}
+.btn.ghost{border-color:var(--line);color:var(--hai)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+
+/* 比較モード */
+.mode-box{background:var(--shu-light);border-left:4px solid var(--shu);padding:10px 12px;border-radius:0 var(--radius) var(--radius) 0;margin-top:12px}
+.mode-box label{display:block;padding:3px 0}
+
+/* チェック項目 */
+.checks{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.chk{position:relative;border:1px solid var(--line);border-radius:var(--radius);padding:8px 10px;background:#fff;display:flex;gap:8px;align-items:flex-start;cursor:pointer}
+.chk input{width:auto;margin:5px 0 0}
+.chk.on{border-color:var(--kon);background:var(--kinu)}
+.chk .name{font-weight:500;color:var(--kon)}
+.chk .desc{font-size:12px;color:var(--hai);line-height:1.4}
+.yt{aspect-ratio:16/9;width:100%;border:0;border-radius:var(--radius);margin-top:8px}
+
+/* 進行 */
+.progress{display:none;background:var(--kon);color:#fff;border-radius:var(--radius);padding:16px;margin-bottom:14px}
+.progress.show{display:block}
+.pbar{height:8px;background:rgba(255,255,255,.2);border-radius:4px;overflow:hidden;margin:10px 0 6px}
+.pbar div{height:100%;background:var(--shu);width:0;transition:width .4s}
+.pmsg{font-family:'Shippori Mincho B1',serif;font-size:18px}
+.psteps{display:flex;gap:14px;font-size:12px;color:#C9D0DE}
+.psteps span.done{color:#fff}
+.err{background:var(--shu-light);border-left:4px solid var(--shu);padding:10px 12px;border-radius:0 var(--radius) var(--radius) 0;margin-bottom:14px;display:none}
+
+/* 結果 */
+#result{display:none}
+.hero{background:var(--kon);color:#fff;border-radius:var(--radius);padding:18px 16px;display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center}
+.hero .headline{font-family:'Shippori Mincho B1',serif;font-size:20px;font-weight:700;line-height:1.5}
+.hero .meta{font-size:12px;color:#C9D0DE;margin-top:6px}
+.hero svg{width:200px;height:200px}
+.res-sec{margin-top:18px}
+.res-sec h2{display:flex;align-items:center;gap:8px}
+.res-sec h2 .tag{font-family:'Noto Sans JP';font-size:12px;font-weight:500;color:#fff;padding:2px 8px;border-radius:3px}
+.tag.good{background:var(--ok)}.tag.imp{background:var(--shu)}
+.item{border:1px solid var(--line);border-left-width:5px;border-radius:var(--radius);padding:12px;margin-top:10px;background:#fff}
+.item.good{border-left-color:var(--ok)}
+.item.imp{border-left-color:var(--shu)}
+.item h3{margin-bottom:6px}
+.item .lbl{display:inline-block;font-size:12px;color:var(--hai);width:5em}
+.ev{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.ev canvas{width:calc(50% - 3px);max-width:280px;border-radius:4px;background:#000;display:block;cursor:zoom-in}
+.ev .cap{width:100%;font-size:12px;color:var(--hai)}
+table.cmp{width:100%;border-collapse:collapse;font-size:14px;margin-top:8px}
+table.cmp th,table.cmp td{border:1px solid var(--line);padding:6px 8px;vertical-align:top;text-align:left}
+table.cmp th{background:var(--kinu);color:var(--kon);font-weight:500}
+.chg{display:inline-block;font-size:12px;padding:1px 6px;border-radius:3px;color:#fff;white-space:nowrap}
+.chg.improved{background:var(--ok)}.chg.same{background:var(--hai)}.chg.declined{background:var(--shu)}
+.mindset{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px}
+.mindset div{font-family:'Shippori Mincho B1',serif;font-size:20px;font-weight:700;color:var(--kon);background:var(--kinu);padding:10px 18px;border-radius:var(--radius);border-bottom:3px solid var(--shu)}
+.drill{border:1px solid var(--line);border-radius:var(--radius);padding:12px;margin-top:8px}
+.drill .type{font-size:12px;color:#fff;background:var(--kon);padding:1px 8px;border-radius:3px;margin-left:6px;font-weight:400}
+.sensei{margin-top:18px;background:var(--kon);color:#fff;border-radius:var(--radius);padding:18px 16px;position:relative}
+.sensei h2{color:#fff}
+.sensei .msg{font-family:'Shippori Mincho B1',serif;font-size:17px;line-height:1.9;white-space:pre-wrap}
+.sensei .caveat{font-size:12px;color:#C9D0DE;margin-top:10px;border-top:1px solid rgba(255,255,255,.2);padding-top:8px}
+.limits{margin-top:14px;background:var(--kinu);padding:10px 12px;border-radius:var(--radius);font-size:14px}
+.actions{margin-top:18px}
+.hist{margin-top:14px}
+.hist .h{display:flex;gap:8px;align-items:center;padding:8px;border:1px solid var(--line);border-radius:var(--radius);margin-top:6px;font-size:14px;background:#fff}
+.hist .h img{width:56px;height:32px;object-fit:cover;border-radius:3px}
+.hist .h .hh{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--sumi);color:#fff;padding:8px 16px;border-radius:20px;font-size:14px;opacity:0;transition:opacity .3s;pointer-events:none}
+.toast.show{opacity:1}
+footer{text-align:center;font-size:12px;color:var(--hai);padding:20px}
+
+@media (max-width:560px){
+  .hero{grid-template-columns:1fr}
+  .hero svg{width:180px;height:180px;margin:0 auto}
+  .checks{grid-template-columns:1fr}
+  .fr{width:calc(33.33% - 4px)}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+/* ===== A4フィードバックシート ===== */
+#sheet{display:none}
+#sheet.preview{display:block;margin:16px 0}
+#sheet.preview .a4{transform-origin:top left;transform:scale(var(--sc,1));margin-bottom:calc((var(--sc,1) - 1) * 297mm)}
+.a4{width:210mm;min-height:297mm;max-height:297mm;overflow:hidden;padding:10mm 11mm;background:#fff;color:#111;
+    font-size:8.6pt;line-height:1.45;position:relative;box-shadow:0 4px 20px rgba(0,0,0,.18);margin:0 auto}
+.a4 .sh-top{display:flex;align-items:flex-end;gap:8mm;border-bottom:1.6pt solid var(--kon);padding-bottom:2mm}
+.a4 .sh-logo{font-family:'Shippori Mincho B1',serif;font-size:19pt;font-weight:800;color:var(--kon);letter-spacing:.08em;line-height:1}
+.a4 .sh-sub{font-size:8pt;color:#555}
+.a4 .sh-who{margin-left:auto;text-align:right;font-size:8.5pt}
+.a4 .sh-who b{font-size:11pt}
+.a4 .sh-head{font-family:'Shippori Mincho B1',serif;font-size:13pt;font-weight:700;color:var(--kon);margin:3mm 0 2mm}
+.a4 .cols{display:grid;grid-template-columns:1fr 62mm;gap:5mm}
+.a4 h4{font-size:9pt;margin:0 0 1mm;color:#fff;background:var(--kon);display:inline-block;padding:.5mm 2.5mm;border-radius:2px}
+.a4 h4.g{background:var(--ok)}.a4 h4.r{background:var(--shu)}
+.a4 .blk{margin-bottom:3mm}
+.a4 .li{margin-bottom:1.4mm}
+.a4 .li b{color:var(--kon)}
+.a4 .li .sm{color:#444}
+.a4 .li .do{color:var(--shu);font-weight:700}
+.a4 .shot{width:100%;border-radius:2px;margin-bottom:1.5mm;display:block}
+.a4 .shotcap{font-size:7pt;color:#555;margin:-1mm 0 2mm}
+.a4 .words{display:flex;gap:2mm;flex-wrap:wrap}
+.a4 .words div{font-family:'Shippori Mincho B1',serif;font-size:12pt;font-weight:700;color:var(--kon);border-bottom:1.2pt solid var(--shu);padding:0 2mm 1mm}
+.a4 .drills{display:grid;grid-template-columns:1fr 1fr 1fr;gap:3mm}
+.a4 .drills div{border:.5pt solid #bbb;border-radius:2px;padding:1.5mm 2mm}
+.a4 .sensei-box{border:1.2pt solid var(--kon);border-radius:2px;padding:2.5mm 3mm;margin-top:3mm;background:#F7F6F2}
+.a4 .sensei-box .t{font-size:9pt;font-weight:700;color:var(--kon);margin-bottom:1mm}
+.a4 .sensei-box .m{font-family:'Shippori Mincho B1',serif;font-size:9.5pt;line-height:1.7;white-space:pre-wrap}
+.a4 .foot{position:absolute;left:11mm;right:11mm;bottom:6mm;font-size:6.8pt;color:#666;border-top:.5pt solid #ccc;padding-top:1.5mm}
+.a4 .gaprow{display:grid;grid-template-columns:1fr 1fr;gap:2mm;margin-top:1mm}
+
+@media print{
+  header,main,footer,.toast,.lb{display:none!important}
+  #sheet{display:block!important;margin:0}
+  .a4{width:auto;min-height:0;height:277mm;max-height:277mm;overflow:hidden;padding:0;box-shadow:none;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  @page{size:A4 portrait;margin:10mm}
+  body{background:#fff}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="head-inner">
+    <div class="head-title">獅子奮迅</div>
+    <div class="head-text">
+      <div class="school">明星中学校・高等学校 剣道部</div>
+      <div class="title">動画解析 ― 見取り稽古をAIと</div>
+      <div class="privacy">動画は<b>あなたの端末内で処理され、保存されません</b>。解析のために切り出した静止画だけをAIに送ります。<br>誰がいつ使ったかは顧問の記録に残ります。</div>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<div class="tabs">
+  <button id="tabA" class="on">部員用（動画を見てもらう）</button>
+  <button id="tabB">顧問用（AIの設定）</button>
+</div>
+
+<div class="pane on" id="paneA">
+
+<section class="step" id="userbox">
+  <div class="step-head"><span class="step-no">名</span><h2>使う人</h2></div>
+  <div class="grid2" style="margin-top:0">
+    <div class="field"><label>名前 <span class="req">必須</span></label><input id="uname" placeholder="例：明星 太郎"></div>
+    <div class="field"><label>学年 <span class="req">必須</span></label><select id="ugrade"><option value="">― 選ぶ ―</option><option>中1</option><option>中2</option><option>中3</option><option>高1</option><option>高2</option><option>高3</option><option>顧問</option><option>OBOG</option></select></div>
+  </div>
+  <div class="field" style="margin-top:8px"><label>部の合言葉 <span class="req">必須</span></label><input type="password" id="upass" placeholder="顧問から聞いた合言葉"></div>
+  <div class="hint">この端末に記憶されるので、次回からは入力不要です。</div>
+</section>
+
+<!-- STEP 1 -->
+<section class="step">
+  <div class="step-head"><span class="step-no">一</span><h2>動画を入れる</h2></div>
+  <div class="drop" id="drop">
+    <div class="big">ここに動画をドロップ</div>
+    <div class="note">1〜4本まで。スマホはカメラロールから選べます。<br><b>10〜30秒くらいの短い動画</b>だと、動きの大きい場面を正確に見つけられます。</div>
+    <label for="vfile">動画を選ぶ</label>
+    <input type="file" id="vfile" accept="video/*" multiple>
+  </div>
+  <div id="vlist"></div>
+  <div class="mode-box" id="modebox" style="display:none">
+    <b>比較モード</b>（2本以上あると自動でオンになります）
+    <label><input type="radio" name="cmp" value="growth" checked> 同じ部員の「以前 vs 今回」― 成長を確かめる</label>
+    <label><input type="radio" name="cmp" value="ideal"> 「自分 vs お手本（先輩・上級者）」― 差を知る</label>
+    <label><input type="radio" name="cmp" value="same_day"> 「1本目 vs 2本目」― 同じ日の別の試合</label>
+  </div>
+</section>
+
+<!-- STEP 2 -->
+<section class="step">
+  <div class="step-head"><span class="step-no">二</span><h2>目指す剣道（お手本）</h2><span class="opt">なくてもOK</span></div>
+  <div class="field"><label>言葉で</label>
+    <textarea id="idealText" placeholder="例：八木橋先生に言われている「左足を引きつけて一拍子で打つ」を目指している"></textarea></div>
+  <div class="grid2">
+    <div class="field"><label>お手本の動画ファイル</label><input type="file" id="idealFile" accept="video/*"></div>
+    <div class="field"><label>YouTube の URL</label><input type="url" id="ytUrl" placeholder="https://www.youtube.com/watch?v=..."></div>
+  </div>
+  <div id="ytWrap"></div>
+  <div class="field" style="margin-top:8px"><label>お手本のどこを見てほしいか（YouTube の場合はここが大事）</label>
+    <input id="idealMemo" placeholder="例：面を打つ前の左足の引きつけと、打った後の抜け方"></div>
+  <div class="row" style="margin-top:8px"><button class="btn" id="btnCompare">お手本と見比べる（並べる／重ねる）</button></div>
+  <div class="hint">YouTube の映像はこのアプリからは取り出せないため、画面に表示するだけになります。AIにはURLと上のメモが伝わります。お手本の設定は次回も残ります。</div>
+</section>
+
+<!-- STEP 3 -->
+<section class="step">
+  <div class="step-head"><span class="step-no">三</span><h2>見てほしいところ</h2></div>
+  <div class="row" style="margin-bottom:10px">
+    <button class="btn" id="btnAuto">おまかせ（全体をバランスよく）</button>
+    <button class="btn ghost small" id="btnClear">選び直す</button>
+  </div>
+  <div class="checks" id="checks"></div>
+  <div class="field" style="margin-top:10px"><label>ほかに聞きたいこと（自由に）</label>
+    <textarea id="freeText" placeholder="例：面の打ちが遅いと言われる。原因を見てほしい。"></textarea></div>
+</section>
+
+<div class="row" style="justify-content:center;margin:6px 0 16px">
+  <button class="btn primary" id="btnRun" style="font-size:17px;padding:12px 32px">解析する</button>
+</div>
+
+<div class="progress" id="progress">
+  <div class="pmsg" id="pmsg">準備中…</div>
+  <div class="pbar"><div id="pbar"></div></div>
+  <div class="psteps"><span id="ps1">① 場面の切り出し</span><span id="ps2">② 送信</span><span id="ps3">③ 解析</span></div>
+</div>
+<div class="err" id="err"></div>
+
+<!-- 結果 -->
+<div id="result">
+  <div class="hero">
+    <div><div class="headline" id="rHeadline"></div><div class="meta" id="rMeta"></div></div>
+    <div id="rRadar"></div>
+  </div>
+
+  <div class="res-sec"><h2>良かったところ <span class="tag good">伸ばす</span></h2><div id="rGood"></div></div>
+  <div class="res-sec"><h2>これからの課題 <span class="tag imp">直す</span></h2><div id="rImp"></div></div>
+  <div class="res-sec" id="rGapSec" style="display:none"><h2>お手本と何が違うか</h2>
+    <div class="row" style="margin-bottom:6px"><button class="btn small" id="btnGapCompare">この場面を重ねて見る</button></div>
+    <div id="rGap"></div></div>
+  <div class="res-sec" id="rCmpSec" style="display:none"><h2>比べてみると</h2><div id="rCmp"></div></div>
+  <div class="res-sec"><h2>稽古中に唱える言葉</h2><div class="mindset" id="rMind"></div></div>
+  <div class="res-sec"><h2>おすすめの稽古</h2><div id="rDrills"></div></div>
+  <div class="sensei"><h2>AI八木橋先生からのひとこと</h2><div class="msg" id="rSensei"></div>
+    <div class="caveat">※AIが八木橋先生の指導方針をもとに生成したものです。本物の八木橋先生の指導が最優先です。</div></div>
+  <div class="limits" id="rLimits"></div>
+  <div class="limits" id="rPartial" style="display:none;background:var(--shu-light);border-left:4px solid var(--shu)"></div>
+
+  <div class="actions row">
+    <button class="btn primary" id="btnPrint">A4フィードバックシートを作る（PDF保存・印刷）</button>
+    <button class="btn" id="btnPreview">A4シートを画面で確認</button>
+    <button class="btn" id="btnCopy">文章をコピー</button>
+    <button class="btn ghost" id="btnTop">もう一度解析する</button>
+  </div>
+</div>
+
+<div class="hist" id="hist"></div>
+
+</div><!-- /paneA -->
+
+<div class="pane" id="paneB">
+  <div class="locked" id="cfgLock">
+    <div class="mincho">顧問用ページ</div>
+    <p class="note">AI八木橋先生の指導方針や稽古メニュー、剣道用語集をここで育てます。<br>
+      ここで保存した内容は、<b>次の解析からすぐ全部員に反映</b>されます。</p>
+    <div class="field" style="max-width:320px;margin:12px auto 0"><label>顧問パスワード</label>
+      <input type="password" id="tpass" placeholder="部員には教えないパスワード"></div>
+    <div class="row" style="justify-content:center;margin-top:10px">
+      <button class="btn primary" id="btnCfgOpen">開く</button></div>
+  </div>
+
+  <div id="cfgBody" style="display:none">
+    <section class="step cfg">
+      <div class="step-head"><span class="step-no">師</span><h2>AI八木橋先生を育てる</h2>
+        <span class="opt" id="cfgSaved"></span></div>
+      <div id="cfgFields"></div>
+      <div class="row" style="justify-content:center;margin-top:6px">
+        <button class="btn primary" id="btnCfgSave">保存する（すぐ反映）</button>
+        <button class="btn ghost" id="btnCfgReload">読み直す</button>
+      </div>
+      <div class="hint" style="margin-top:10px">スプレッドシートの「AI設定」シートを直接書き換えても同じように反映されます。稽古で気づいたことを1行足すだけでも、AIの言葉は変わります。</div>
+    </section>
+  </div>
+</div><!-- /paneB -->
+
+</main>
+<footer>明星中学校・高等学校 剣道部 ― 部訓「獅子奮迅」／打って反省、打たれて感謝</footer>
+<div class="toast" id="toast"></div>
+
+<div id="sheet"></div>
+
+<div class="cw" id="cw" role="dialog" aria-label="お手本と見比べる">
+  <div class="cw-head">
+    <span class="ttl">お手本と見比べる</span>
+    <button id="cwSide" class="on">並べる</button>
+    <button id="cwOver">重ねる</button>
+    <span class="sp"></span>
+    <button id="cwClose">閉じる</button>
+  </div>
+  <div class="cw-body">
+    <div id="cwSideView" class="cw-side">
+      <div class="col yours"><h4>あなた</h4><img id="cwY" alt=""><div class="note" id="cwYc" style="color:#9AA6BF;font-size:12px"></div></div>
+      <div class="col mihon"><h4>お手本</h4><img id="cwM" alt=""><div class="note" id="cwMc" style="color:#9AA6BF;font-size:12px"></div></div>
+    </div>
+    <div id="cwOverView" style="display:none">
+      <div class="cw-stage" id="cwStage"><img id="cwBase" alt=""><img id="cwTop" class="top" alt=""></div>
+      <div class="cw-ctl"><span class="lab">お手本の濃さ</span><input type="range" id="cwAlpha" min="0" max="100" value="50"></div>
+      <div class="cw-ctl"><span class="lab">お手本の大きさ</span><input type="range" id="cwScale" min="50" max="180" value="100">
+        <button class="btn small" id="cwFlip" style="background:#fff">左右反転</button>
+        <button class="btn small" id="cwReset" style="background:#fff">位置をもどす</button></div>
+      <div class="cw-ctl"><span class="lab">お手本を指でドラッグすると位置を合わせられます</span></div>
+    </div>
+  </div>
+  <div class="cw-foot">
+    <button class="g" id="cwYPrev">◀ あなた</button><button class="g" id="cwYNext">あなた ▶</button>
+    <button id="cwSync">そろえて送る ▶</button>
+    <button class="g" id="cwMPrev">◀ お手本</button><button class="g" id="cwMNext">お手本 ▶</button>
+  </div>
+</div>
+
+<div class="lb" id="lb" role="dialog" aria-label="拡大表示">
+  <div class="lb-view" id="lbView"><img id="lbImg" alt=""></div>
+  <div class="lb-bar">
+    <span class="cap" id="lbCap"></span>
+    <div class="lb-film" id="lbFilm">
+      <button class="g" id="lbPrev" aria-label="前の場面">◀</button>
+      <button id="lbPlay">▶ スロー再生</button>
+      <button class="g" id="lbNext" aria-label="次の場面">▶</button>
+    </div>
+    <button id="lbOut" aria-label="縮小">－</button>
+    <button id="lbIn" aria-label="拡大">＋</button>
+    <button class="g" id="lbFit">全体</button>
+    <button class="g" id="lbClose">閉じる</button>
+  </div>
+</div>
+
+<script>
+/* ========= 設定 ========= */
+const MAX_VIDEOS = 4, AUTO_FRAMES = 8, MAX_FRAMES = 8, IDEAL_FRAMES = 6;
+const FRAME_W = 640;   // AIに送る大きさ
+const HI_W    = 1280;  // 画面で拡大して見るための大きさ
+// ★顧問が設定する：Google Apps Script のウェブアプリURL（セットアップ手順.md 参照）
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbzGXxX5e9B49IxSk70gLEnyfuM2kpuT9c2MVpek9vNiBwVQKdBnr3Xsddp38ZSJrxvv/exec';
+const CHECK_ITEMS = [
+  ['間合い','相手との距離の取り方。一足一刀の間（一歩で打てる距離）を保てているか'],
+  ['ため','打つ前に崩れず、攻めを効かせて相手を動かせているか'],
+  ['起こり','打ち出しの初動が大きくないか。相手の起こりを捉えているか'],
+  ['体のさばき','体の運び方と、打った後の体勢が崩れていないか'],
+  ['足さばき','左足の引きつけ、すり足、踏み込みの鋭さ'],
+  ['気剣体の一致','気合・竹刀・体が一つになった打突になっているか'],
+  ['残心','打った後も構え直し、相手への注意が続いているか'],
+  ['気迫','発声、姿勢、攻める気持ちが伝わるか'],
+  ['構え','中段の形、竹刀の高さ、左拳の位置'],
+  ['打突の正確さ','打突部位に当たっているか、刃筋、冴え'],
+  ['鍔迫り合い・分かれ方','鍔迫り合いでの姿勢と、きれいに分かれられているか'],
+  ['試合運び','時間の使い方、有効打突の狙い方'],
+];
+const SITUATIONS = ['練習試合','地稽古','基本稽古','試合本番','昇段審査の稽古','その他'];
+const SIDES = [['','― 選んでください ―'],['左','画面の左側'],['右','画面の右側'],['赤','赤（紅白の紐）'],['白','白（紅白の紐）']];
+const WAIT_MSGS = ['見取り稽古中…','一本一本を見直しています…','八木橋先生が考え中…','残心まで確かめています…','もう少しで書き上がります…'];
+
+/* ========= 状態 ========= */
+const state = { videos: [], idealFrames: [], lastResult: null };
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const inArtifact = /claude\.ai|claudeusercontent/.test(location.hostname) || location.protocol === 'blob:';
+
+/* ========= 初期化 ========= */
+(function init(){
+  try{ const u=JSON.parse(localStorage.getItem('sf_user')||'{}'); $('uname').value=u.name||''; $('ugrade').value=u.grade||''; $('upass').value=u.pass||''; }catch(e){}
+  ['uname','ugrade','upass'].forEach(id=>$(id).addEventListener('input',()=>localStorage.setItem('sf_user',JSON.stringify({name:$('uname').value.trim(),grade:$('ugrade').value,pass:$('upass').value}))));
+  // チェック項目
+  $('checks').innerHTML = CHECK_ITEMS.map(([n,d],i)=>`<label class="chk" data-i="${i}"><input type="checkbox" value="${esc(n)}"><div><div class="name">${esc(n)}</div><div class="desc">${esc(d)}</div></div></label>`).join('');
+  document.querySelectorAll('.chk input').forEach(c=>c.addEventListener('change',e=>e.target.closest('.chk').classList.toggle('on',e.target.checked)));
+  const AUTO_SET=['間合い','起こり','足さばき','気剣体の一致','残心','打突の正確さ'];
+  $('btnAuto').onclick=()=>{document.querySelectorAll('.chk input').forEach(c=>{c.checked=AUTO_SET.includes(c.value);c.dispatchEvent(new Event('change'))});toast('基本の6項目をバランスよく見ます')};
+  $('btnClear').onclick=()=>document.querySelectorAll('.chk input').forEach(c=>{c.checked=false;c.dispatchEvent(new Event('change'))});
+  // お手本の復元
+  try{ const s=JSON.parse(localStorage.getItem('sf_ideal')||'{}'); $('idealText').value=s.text||''; $('ytUrl').value=s.yt||''; $('idealMemo').value=s.memo||''; renderYT(); }catch(e){}
+  ['idealText','ytUrl','idealMemo'].forEach(id=>$(id).addEventListener('input',()=>{ localStorage.setItem('sf_ideal',JSON.stringify({text:$('idealText').value,yt:$('ytUrl').value,memo:$('idealMemo').value})); if(id==='ytUrl')renderYT(); }));
+  $('idealFile').addEventListener('change',async e=>{ const f=e.target.files[0]; if(!f)return; toast('お手本の動きを調べています…'); state.idealFrames=await extractFrames(f,IDEAL_FRAMES); renderVideos(); toast(`お手本から${state.idealFrames.length}枚えらびました`); });
+  // ドロップ
+  const drop=$('drop');
+  ['dragenter','dragover'].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.add('over')}));
+  ['dragleave','drop'].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.remove('over')}));
+  drop.addEventListener('drop',e=>addVideos(e.dataTransfer.files));
+  $('vfile').addEventListener('change',e=>{addVideos(e.target.files);e.target.value=''});
+  $('btnRun').onclick=run;
+  $('btnCompare').onclick=()=>openCompare(null);
+  $('btnGapCompare').onclick=()=>{
+    const g=(state.lastResult&&state.lastResult.json.ideal_gap||[])[0]||{};
+    const ref=g.your_ref||{}; let yi=0, n=0;
+    state.videos.forEach((vv,vidx)=>vv.frames.forEach((f,fi)=>{ if(vidx===(ref.video||0)&&fi===(ref.frame||0)) yi=n; n++; }));
+    openCompare(null,yi,g.ideal_frame||0);
+  };
+  $('btnPrint').onclick=async()=>{ if(!state.lastResult)return; toast('シートを作っています…'); await buildSheet(state.lastResult); setTimeout(()=>window.print(),600); };
+  $('btnPreview').onclick=async()=>{ if(!state.lastResult)return; await buildSheet(state.lastResult);
+    const sh=$('sheet'); sh.classList.toggle('preview');
+    $('btnPreview').textContent=sh.classList.contains('preview')?'A4シートを閉じる':'A4シートを画面で確認';
+    if(sh.classList.contains('preview')){ fitSheet(); setTimeout(()=>sh.scrollIntoView({behavior:'smooth'}),100); } };
+  window.addEventListener('resize',fitSheet);
+  $('btnCopy').onclick=copyText;
+  $('btnTop').onclick=()=>{window.scrollTo({top:0,behavior:'smooth'})};
+  renderHistory();
+})();
+
+function fitSheet(){ const sh=$('sheet'); if(!sh.classList.contains('preview'))return;
+  const a4=sh.querySelector('.a4'); if(!a4)return;
+  const avail=sh.clientWidth||document.body.clientWidth;
+  const w=a4.offsetWidth||794; sh.style.setProperty('--sc',Math.min(1,avail/w).toFixed(3));
+}
+function toast(m){const t=$('toast');t.textContent=m;t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),2200)}
+
+function renderYT(){
+  const u=$('ytUrl').value.trim(); const m=u.match(/(?:v=|youtu\.be\/|shorts\/)([\w-]{11})/);
+  $('ytWrap').innerHTML = m ? `<iframe class="yt" src="https://www.youtube.com/embed/${m[1]}" allowfullscreen title="お手本動画"></iframe>` : '';
+}
+
+/* ========= 動画の追加とフレーム抽出 ========= */
+async function addVideos(files){
+  for(const f of files){
+    if(!f.type.startsWith('video/')&&!/\.(mp4|mov|m4v|webm)$/i.test(f.name)){toast(`${f.name} は動画ではないようです`);continue;}
+    if(state.videos.length>=MAX_VIDEOS){toast(`動画は${MAX_VIDEOS}本までです`);break;}
+    const v={id:Date.now()+Math.random(),file:f,url:URL.createObjectURL(f),title:f.name.replace(/\.[^.]+$/,''),date:new Date().toISOString().slice(0,10),situation:'練習試合',side:'',frames:[],ready:false,prog:0};
+    state.videos.push(v); renderVideos();
+    try{
+      v.frames=await extractFrames(f,AUTO_FRAMES,pc=>{ v.prog=pc; const el=document.querySelector(`[data-prog="${v.id}"]`); if(el) el.textContent=Math.round(pc*100)+'%'; });
+      v.ready=true;
+    }catch(e){ toast('この動画は読み込めませんでした（形式をご確認ください）'); state.videos=state.videos.filter(x=>x!==v); }
+    renderVideos();
+  }
+}
+
+// 動画を細かく見て「動きの大きい瞬間」を自動で見つけ、その8場面を切り出す
+// 画面で拡大して見られる大きい画像(hi)と、AIに送る小さい画像(dataUrl)の2枚を作る
+function extractFrames(file,count,onProgress){
+  return new Promise((resolve,reject)=>{
+    const url=URL.createObjectURL(file); const video=document.createElement('video');
+    video.muted=true; video.playsInline=true; video.preload='auto'; video.src=url;
+    const timer=setTimeout(()=>reject(new Error('timeout')),180000);
+    video.onerror=()=>reject(new Error('load error'));
+    video.onloadedmetadata=async()=>{
+      const dur=video.duration; if(!isFinite(dur)||dur===0){reject(new Error('no duration'));return;}
+      // 1) 動きの大きさを測る（小さい画像で高速に）
+      const N=Math.max(20,Math.min(72,Math.round(dur*10)));
+      const tiny=mkCanvas(video,80); let prev=null; const motion=[];
+      for(let i=0;i<N;i++){
+        const t=dur*(i+0.5)/N;
+        await seekTo(video,t);
+        tiny.ctx.drawImage(video,0,0,tiny.c.width,tiny.c.height);
+        const d=tiny.ctx.getImageData(0,0,tiny.c.width,tiny.c.height).data;
+        let m=0;
+        if(prev){ for(let k=0;k<d.length;k+=4){ m+=Math.abs(d[k]-prev[k])+Math.abs(d[k+1]-prev[k+1])+Math.abs(d[k+2]-prev[k+2]); } m=m/(d.length/4)/3; }
+        motion.push({t,m}); prev=d;
+        if(onProgress) onProgress(i/N);
+      }
+      // 2) 動きの山を選ぶ
+      const picks=pickPeaks(motion,count,dur);
+      // 3) 選んだ時刻で本番の画像を切り出す
+      const hi=mkCanvas(video,HI_W), lo=mkCanvas(video,FRAME_W); const frames=[];
+      for(const pk of picks){
+        await seekTo(video,pk.t);
+        hi.ctx.drawImage(video,0,0,hi.c.width,hi.c.height);
+        lo.ctx.drawImage(video,0,0,lo.c.width,lo.c.height);
+        frames.push({t:pk.t,motion:pk.m,auto:pk.peak,hi:hi.c.toDataURL('image/jpeg',0.82),
+                     dataUrl:lo.c.toDataURL('image/jpeg',0.72),manual:false,side:''});
+      }
+      clearTimeout(timer); URL.revokeObjectURL(url); resolve(frames);
+    };
+  });
+}
+
+// 動きの時系列から、山になっている瞬間を count 個えらぶ
+function pickPeaks(motion,count,dur){
+  const n=motion.length;
+  const sm=motion.map((p,i)=>({t:p.t,m:(motion[Math.max(0,i-1)].m+p.m+motion[Math.min(n-1,i+1)].m)/3}));
+  const maxM=Math.max(...sm.map(p=>p.m));
+  const sorted=sm.map(p=>p.m).sort((a,b)=>a-b);
+  const mid=sorted[Math.floor(sorted.length/2)]||0;
+  const hot=Math.max(maxM*0.35,mid*1.8,3); // これを超えたら「打突などの動き」とみなす
+  const gap=dur/(count*1.7); // 同じ場面ばかり選ばないための最小間隔
+  const picked=[];
+  if(maxM>3){ // 十分な動きがあるときだけ山を使う
+    sm.map((p,i)=>({...p,i})).sort((a,b)=>b.m-a.m).forEach(p=>{
+      if(picked.length>=count) return;
+      if(picked.some(q=>Math.abs(q.t-p.t)<gap)) return;
+      picked.push({t:p.t,m:p.m,peak:p.m>=hot});
+    });
+  }
+  // 足りない分は等間隔で埋める
+  for(let i=0;picked.length<count&&i<count*3;i++){
+    const t=dur*(i+0.5)/count;
+    if(!picked.some(q=>Math.abs(q.t-t)<gap*0.7)) picked.push({t,m:0,peak:false});
+  }
+  return picked.slice(0,count).sort((a,b)=>a.t-b.t);
+}
+
+function mkCanvas(video,w){
+  const c=document.createElement('canvas'); const s=Math.min(1,w/video.videoWidth);
+  c.width=Math.round(video.videoWidth*s); c.height=Math.round(video.videoHeight*s);
+  return {c,ctx:c.getContext('2d',{willReadFrequently:true})};
+}
+function seekTo(video,t){return new Promise(res=>{const h=()=>{video.removeEventListener('seeked',h);res()};video.addEventListener('seeked',h);video.currentTime=t;});}
+
+// 再生中の場面を手動で追加
+function captureManual(v){
+  const el=document.querySelector(`video[data-id="${v.id}"]`); if(!el||!el.videoWidth){toast('動画を少し再生してから止めてください');return;}
+  if(v.frames.length>=MAX_FRAMES){toast(`場面は${MAX_FRAMES}枚までです。いらない場面を×で消してから追加してください`);return;}
+  const hi=mkCanvas(el,HI_W), lo=mkCanvas(el,FRAME_W);
+  hi.ctx.drawImage(el,0,0,hi.c.width,hi.c.height); lo.ctx.drawImage(el,0,0,lo.c.width,lo.c.height);
+  v.frames.push({t:el.currentTime,hi:hi.c.toDataURL('image/jpeg',0.85),dataUrl:lo.c.toDataURL('image/jpeg',0.75),manual:true,side:''});
+  v.frames.sort((a,b)=>a.t-b.t);
+  renderFrames(v);   // 動画プレーヤーはそのまま。続けてコマ送りで次の場面を選べます
+  toast(`${fmt(el.currentTime)} の場面を追加（続けてコマ送りで選べます／残り${MAX_FRAMES-v.frames.length}枚）`);
+}
+
+const fmt=t=>`${Math.floor(t/60)}:${String(Math.floor(t%60)).padStart(2,'0')}`;
+
+const SIDE_CYCLE=['左','右','赤','白'];
+const effSide=(v,f)=>f.side||v.side||'';
+
+function framesBlock(v){
+  return `<div class="hint" style="margin-top:6px">${v.ready
+      ? `動きの大きい場面を自動で${v.frames.length}枚えらびました（${v.frames.filter(f=>f.auto).length}枚は打突などの動きから検出）。<b>画像をタップすると拡大とスロー送り</b>。右下の青いボタンは<b>その1枚で自分がどちら側か</b>で、途中で入れ替わったらその場面だけ押して直します。`
+      : `動きの大きい場面をさがしています… <b data-prog="${v.id}">0%</b>`}</div>
+    ${v.ready?`<div class="row" style="margin:6px 0"><button class="btn small" data-slow="${v.id}">${v.frames.length}場面をスローで見る</button>${state.idealFrames.length?`<button class="btn small" data-cmp2="${v.id}">お手本と見比べる</button>`:''}</div>`:''}
+    <div class="frames">${v.frames.map((f,j)=>`<div class="fr ${f.manual?'manual':''}">
+        <img src="${f.hi}" data-zoom="${v.id}:${j}" alt="${fmt(f.t)} の場面">
+        <span class="t">${fmt(f.t)}${f.auto?' ●':''}</span>
+        <button class="side ${f.side?'':'off'}" data-side="${v.id}" data-j="${j}" title="この1枚で自分がどちら側か">${esc(effSide(v,f)||'？')}</button>
+        <button class="x" data-fx="${v.id}" data-j="${j}" aria-label="削除">×</button></div>`).join('')}</div>`;
+}
+
+// 場面まわりだけを描き直す（動画プレーヤーには触らないので、再生位置も速度もそのまま）
+function renderFrames(v){
+  const box=document.querySelector(`[data-fpart="${v.id}"]`);
+  if(!box){ renderVideos(); return; }
+  box.innerHTML=framesBlock(v);
+  bindHandlers(box);
+}
+
+function renderVideos(){
+  const box=$('vlist');
+  box.innerHTML=state.videos.map((v,i)=>`
+  <div class="vcard">
+    <div class="vhead"><span class="step-no" style="font-size:16px">${['一','二','三','四'][i]}本目</span><span class="vname">${esc(v.title)}</span>
+      <button class="btn ghost small" data-del="${v.id}">外す</button></div>
+    <video src="${v.url}" controls playsinline data-id="${v.id}"></video>
+    <div class="row" style="margin-top:6px">
+      <span class="note">スロー再生</span>
+      <button class="btn small" data-rate="${v.id}:1">等倍</button>
+      <button class="btn small" data-rate="${v.id}:0.5">1/2</button>
+      <button class="btn small" data-rate="${v.id}:0.25">1/4</button>
+      <button class="btn small" data-step="${v.id}:-0.1">◀ コマ</button>
+      <button class="btn small" data-step="${v.id}:0.1">コマ ▶</button>
+    </div>
+    <div class="row" style="margin-top:6px"><button class="btn small" data-cap="${v.id}">今止めている場面を「ここを見て」に追加</button><span class="note">合計${MAX_FRAMES}枚まで</span></div>
+    <div class="grid2">
+      <div class="field"><label>タイトル</label><input data-f="title" data-id="${v.id}" value="${esc(v.title)}"></div>
+      <div class="field"><label>日付</label><input type="date" data-f="date" data-id="${v.id}" value="${v.date}"></div>
+      <div class="field"><label>状況</label><select data-f="situation" data-id="${v.id}">${SITUATIONS.map(s=>`<option ${s===v.situation?'selected':''}>${s}</option>`).join('')}</select></div>
+      <div class="field"><label>自分はどっち？（全体） <span class="req">必須</span></label><select data-f="side" data-id="${v.id}">${SIDES.map(([val,l])=>`<option value="${val}" ${val===v.side?'selected':''}>${l}</option>`).join('')}</select></div>
+    </div>
+    <div data-fpart="${v.id}">${framesBlock(v)}</div>
+  </div>`).join('');
+  bindHandlers(box);
+  $('modebox').style.display=state.videos.length>=2?'block':'none';
+}
+
+const findVideo=id=>state.videos.find(v=>String(v.id)===String(id));
+const videoEl=id=>document.querySelector(`video[data-id="${id}"]`);
+
+function bindHandlers(root){
+  root.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>{state.videos=state.videos.filter(v=>String(v.id)!==b.dataset.del);renderVideos()});
+  root.querySelectorAll('[data-cap]').forEach(b=>b.onclick=()=>captureManual(findVideo(b.dataset.cap)));
+  root.querySelectorAll('[data-fx]').forEach(b=>b.onclick=()=>{const v=findVideo(b.dataset.fx);v.frames.splice(+b.dataset.j,1);renderFrames(v)});
+  root.querySelectorAll('[data-side]').forEach(b=>b.onclick=()=>{
+    const v=findVideo(b.dataset.side), f=v.frames[+b.dataset.j];
+    const i=SIDE_CYCLE.indexOf(effSide(v,f));
+    f.side=SIDE_CYCLE[(i+1)%SIDE_CYCLE.length]; renderFrames(v);
+  });
+  root.querySelectorAll('[data-rate]').forEach(b=>b.onclick=()=>{
+    const [id,r]=b.dataset.rate.split(':'); const el=videoEl(id);
+    if(el){ el.playbackRate=+r; el.play().catch(()=>{}); toast(r==='1'?'等倍で再生':'スロー再生 '+r+'倍'); }
+  });
+  root.querySelectorAll('[data-step]').forEach(b=>b.onclick=()=>{
+    const [id,d]=b.dataset.step.split(':'); const el=videoEl(id);
+    if(el){ el.pause(); el.currentTime=Math.max(0,Math.min((el.duration||0)-0.01,el.currentTime+ +d)); }
+  });
+  root.querySelectorAll('[data-slow]').forEach(b=>b.onclick=()=>{ const v=findVideo(b.dataset.slow); openFilm(v.frames.map(f=>({src:f.hi,cap:`${v.title} ${fmt(f.t)}（自分＝${effSide(v,f)||'未設定'}側）`}))); });
+  root.querySelectorAll('[data-cmp2]').forEach(b=>b.onclick=()=>openCompare(findVideo(b.dataset.cmp2)));
+  root.querySelectorAll('[data-zoom]').forEach(im=>im.onclick=()=>{
+    const [id,j]=im.dataset.zoom.split(':'); const v=findVideo(id);
+    openFilm(v.frames.map(f=>({src:f.hi,cap:`${v.title} ${fmt(f.t)}（自分＝${effSide(v,f)||'未設定'}側）`})),+j);
+  });
+  root.querySelectorAll('[data-f]').forEach(el=>el.onchange=()=>{
+    const v=findVideo(el.dataset.id); v[el.dataset.f]=el.value;
+    if(el.dataset.f==='side') renderFrames(v);          // 左右の表示だけ更新（動画は止めない）
+    if(el.dataset.f==='title') el.closest('.vcard').querySelector('.vname').textContent=v.title;
+  });
+}
+
+/* ========= タブと顧問用ページ ========= */
+const CFG_HELP = {
+  '指導方針・口調':'AI八木橋先生の語り口。何を最初に見るか、どんな言い方をするか。ここを書くほど「先生らしく」なります。',
+  'よく使う金言・教え':'1行に1つ。場面に合うものをAIが選んで引用します。',
+  '部の稽古メニュー（この中から提案する）':'1行に1つ。AIはこの中から稽古を提案します。部にないメニューを出させないための欄です。',
+  '剣道用語集（用語：説明 を1行ずつ）':'「用語：説明」の形で。AIはこの説明の言い方に合わせて部員に説明します。',
+  '学年・段階に応じた配慮':'中1の初心者と高3の経験者で、どこまで踏み込むか。',
+  '独自に必ず見る観点':'部として毎回必ず見てほしいこと。選んだ分析ポイントに加えて確認されます。',
+  'そのほかの指示':'大会前、審査前など、その時期に伝えたいこと。'
+};
+let cfgItems=[], cfgData={};
+
+(function tabsInit(){
+  const show=b=>{ $('tabA').classList.toggle('on',!b); $('tabB').classList.toggle('on',b);
+    $('paneA').classList.toggle('on',!b); $('paneB').classList.toggle('on',b); window.scrollTo({top:0}); };
+  $('tabA').onclick=()=>show(false);
+  $('tabB').onclick=()=>show(true);
+  $('btnCfgOpen').onclick=loadCfg;
+  $('tpass').addEventListener('keydown',e=>{if(e.key==='Enter')loadCfg()});
+  $('btnCfgReload').onclick=loadCfg;
+  $('btnCfgSave').onclick=saveCfg;
+})();
+
+async function cfgCall(action,extra){
+  if(inArtifact) throw new Error('この設定は、GitHub Pages に置いたアプリから使ってください（Claude.ai の中では保存先につながりません）。');
+  const body=Object.assign({action,teacherPass:$('tpass').value},extra||{});
+  const res=await fetch(GAS_URL,{method:'POST',body:JSON.stringify(body)});
+  const j=await res.json().catch(()=>({ok:false,error:'返答を読めませんでした'}));
+  if(!j.ok){ throw new Error(j.error==='bad_teacher_pass'?'顧問パスワードが違います。':(j.error||'うまくいきませんでした')); }
+  return j;
+}
+
+async function loadCfg(){
+  try{
+    $('btnCfgOpen').disabled=true; toast('読み込んでいます…');
+    const j=await cfgCall('getSettings');
+    cfgItems=j.items||[]; cfgData=j.settings||{};
+    $('cfgFields').innerHTML=cfgItems.map((name,i)=>`<div class="field">
+        <label>${esc(name)}</label>
+        <div class="what">${esc(CFG_HELP[name]||'')}</div>
+        <textarea data-cfg="${i}">${esc(cfgData[name]||'')}</textarea>
+      </div>`).join('');
+    $('cfgLock').style.display='none'; $('cfgBody').style.display='block';
+    $('cfgSaved').textContent='';
+    toast('読み込みました');
+  }catch(e){ toast(e.message); }
+  $('btnCfgOpen').disabled=false;
+}
+
+async function saveCfg(){
+  const s={};
+  document.querySelectorAll('[data-cfg]').forEach(t=>{ s[cfgItems[+t.dataset.cfg]]=t.value; });
+  try{
+    $('btnCfgSave').disabled=true; toast('保存しています…');
+    await cfgCall('saveSettings',{settings:s});
+    cfgData=s;
+    const now=new Date();
+    $('cfgSaved').textContent=`保存しました（${now.getHours()}:${String(now.getMinutes()).padStart(2,'0')}）`;
+    toast('保存しました。次の解析からすぐ反映されます');
+  }catch(e){ toast(e.message); }
+  $('btnCfgSave').disabled=false;
+}
+
+/* ========= 拡大表示・コマ送り・スロー再生 ========= */
+let zoomS=1,zoomX=0,zoomY=0;
+let film=[],filmI=0,filmTimer=null;
+
+function clampZoom(){ const lim=Math.max(0,(1-1/zoomS)*50); zoomX=Math.max(-lim,Math.min(lim,zoomX)); zoomY=Math.max(-lim,Math.min(lim,zoomY)); }
+function applyZoom(){ $('lbImg').style.transform=`scale(${zoomS}) translate(${zoomX}%,${zoomY}%)`; }
+
+// items = [{src,cap}]  拡大したまま前後の場面へコマ送りできる
+function openFilm(items,index,focus){
+  film=items||[]; filmI=Math.max(0,Math.min(film.length-1,index||0));
+  $('lbFilm').classList.toggle('hide',film.length<2);
+  if(focus&&typeof focus.x==='number'){ zoomS=2.6; zoomX=(0.5-focus.x)*100; zoomY=(0.5-focus.y)*100; clampZoom(); }
+  else { zoomS=1; zoomX=0; zoomY=0; }
+  showFilm(); $('lb').classList.add('show');
+}
+function openZoom(src,caption,focus){ openFilm([{src,cap:caption}],0,focus); }
+function showFilm(){
+  const it=film[filmI]; if(!it)return;
+  $('lbImg').src=it.src;
+  $('lbCap').textContent=(it.cap||'')+(film.length>1?`　［${filmI+1}／${film.length}］`:'');
+  applyZoom();
+}
+function stepFilm(d){ if(!film.length)return; filmI=(filmI+d+film.length)%film.length; showFilm(); }
+function stopFilm(){ if(filmTimer){clearInterval(filmTimer);filmTimer=null;$('lbPlay').textContent='▶ スロー再生';} }
+
+(function zoomInit(){
+  const view=$('lbView'), im=$('lbImg');
+  const close=()=>{stopFilm();$('lb').classList.remove('show')};
+  $('lbClose').onclick=close;
+  $('lbFit').onclick=()=>{zoomS=1;zoomX=0;zoomY=0;applyZoom()};
+  $('lbIn').onclick=()=>{zoomS=Math.min(6,zoomS*1.4);clampZoom();applyZoom()};
+  $('lbOut').onclick=()=>{zoomS=Math.max(1,zoomS/1.4);clampZoom();if(zoomS===1){zoomX=0;zoomY=0}applyZoom()};
+  $('lbPrev').onclick=()=>{stopFilm();stepFilm(-1)};
+  $('lbNext').onclick=()=>{stopFilm();stepFilm(1)};
+  $('lbPlay').onclick=()=>{
+    if(filmTimer){stopFilm();return;}
+    $('lbPlay').textContent='■ 止める';
+    filmTimer=setInterval(()=>stepFilm(1),700); // ゆっくり送る
+  };
+  document.addEventListener('keydown',e=>{
+    if(!$('lb').classList.contains('show'))return;
+    if(e.key==='Escape')close();
+    if(e.key==='ArrowRight'){stopFilm();stepFilm(1)}
+    if(e.key==='ArrowLeft'){stopFilm();stepFilm(-1)}
+  });
+  let drag=null;
+  view.addEventListener('pointerdown',e=>{if(zoomS<=1)return;drag={x:e.clientX,y:e.clientY};view.setPointerCapture(e.pointerId);im.style.cursor='grabbing'});
+  view.addEventListener('pointermove',e=>{ if(!drag)return;
+    zoomX+=(e.clientX-drag.x)/(im.clientWidth *zoomS)*100;
+    zoomY+=(e.clientY-drag.y)/(im.clientHeight*zoomS)*100;
+    clampZoom(); drag={x:e.clientX,y:e.clientY}; applyZoom(); });
+  ['pointerup','pointercancel','pointerleave'].forEach(ev=>view.addEventListener(ev,()=>{drag=null;im.style.cursor='grab'}));
+  im.addEventListener('dblclick',()=>{zoomS=zoomS>1?1:2.6;if(zoomS===1){zoomX=0;zoomY=0}applyZoom()});
+})();
+
+
+/* ========= お手本と見比べる（並べる／重ねる） ========= */
+const cwS={yours:[],mihon:[],yi:0,mi:0,alpha:.5,scale:1,flip:false,dx:0,dy:0,label:''};
+
+function openCompare(v,startY,startM){
+  if(!state.idealFrames.length){ toast('先に「二 目指す剣道」でお手本の動画を入れてください'); return; }
+  const vids=v?[v]:state.videos;
+  cwS.yours=[]; vids.forEach(vv=>vv.frames.forEach(f=>cwS.yours.push({src:f.hi||f.dataUrl,cap:`${vv.title} ${fmt(f.t)}`})));
+  cwS.mihon=state.idealFrames.map(f=>({src:f.hi||f.dataUrl,cap:`お手本 ${fmt(f.t)}`}));
+  cwS.yi=Math.max(0,Math.min(cwS.yours.length-1,startY||0));
+  cwS.mi=Math.max(0,Math.min(cwS.mihon.length-1,startM||0));
+  cwS.dx=0; cwS.dy=0; cwS.scale=1; cwS.flip=false;
+  $('cwAlpha').value=50; $('cwScale').value=100;
+  drawCompare(); $('cw').classList.add('show');
+}
+function drawCompare(){
+  const y=cwS.yours[cwS.yi]||{}, m=cwS.mihon[cwS.mi]||{};
+  $('cwY').src=y.src||''; $('cwYc').textContent=(y.cap||'')+`　［${cwS.yi+1}／${cwS.yours.length}］`;
+  $('cwM').src=m.src||''; $('cwMc').textContent=(m.cap||'')+`　［${cwS.mi+1}／${cwS.mihon.length}］`;
+  $('cwBase').src=y.src||''; $('cwTop').src=m.src||'';
+  $('cwTop').style.opacity=cwS.alpha;
+  $('cwTop').style.transform=`translate(${cwS.dx}px,${cwS.dy}px) scale(${cwS.scale}) scaleX(${cwS.flip?-1:1})`;
+}
+(function cwInit(){
+  const sideBtn=$('cwSide'), overBtn=$('cwOver');
+  const mode=over=>{ sideBtn.classList.toggle('on',!over); overBtn.classList.toggle('on',over);
+    $('cwSideView').style.display=over?'none':'grid'; $('cwOverView').style.display=over?'block':'none'; };
+  sideBtn.onclick=()=>mode(false); overBtn.onclick=()=>mode(true);
+  $('cwClose').onclick=()=>$('cw').classList.remove('show');
+  $('cwAlpha').oninput=e=>{cwS.alpha=e.target.value/100;drawCompare()};
+  $('cwScale').oninput=e=>{cwS.scale=e.target.value/100;drawCompare()};
+  $('cwFlip').onclick=()=>{cwS.flip=!cwS.flip;drawCompare()};
+  $('cwReset').onclick=()=>{cwS.dx=0;cwS.dy=0;cwS.scale=1;cwS.flip=false;$('cwScale').value=100;drawCompare()};
+  const step=(k,d)=>{ const arr=k==='y'?cwS.yours:cwS.mihon; if(!arr.length)return;
+    if(k==='y') cwS.yi=(cwS.yi+d+arr.length)%arr.length; else cwS.mi=(cwS.mi+d+arr.length)%arr.length; drawCompare(); };
+  $('cwYPrev').onclick=()=>step('y',-1); $('cwYNext').onclick=()=>step('y',1);
+  $('cwMPrev').onclick=()=>step('m',-1); $('cwMNext').onclick=()=>step('m',1);
+  $('cwSync').onclick=()=>{step('y',1);step('m',1)};
+  // 重ねたお手本をドラッグで位置合わせ
+  let drag=null; const top=$('cwTop');
+  top.addEventListener('pointerdown',e=>{drag={x:e.clientX-cwS.dx,y:e.clientY-cwS.dy};top.setPointerCapture(e.pointerId);e.preventDefault()});
+  top.addEventListener('pointermove',e=>{if(!drag)return;cwS.dx=e.clientX-drag.x;cwS.dy=e.clientY-drag.y;drawCompare()});
+  ['pointerup','pointercancel'].forEach(ev=>top.addEventListener(ev,()=>drag=null));
+  document.addEventListener('keydown',e=>{ if($('cw').classList.contains('show')&&e.key==='Escape')$('cw').classList.remove('show'); });
+})();
+
+/* ========= 解析の実行 ========= */
+function setProgress(step,pct,msg){ $('pbar').style.width=pct+'%'; $('pmsg').textContent=msg; [1,2,3].forEach(n=>$('ps'+n).classList.toggle('done',n<=step)); }
+
+async function run(){
+  $('err').style.display='none';
+  if(!state.videos.length){toast('まず動画を入れてください');return;}
+  if(state.videos.some(v=>!v.ready)){toast('動画の読み込みが終わるまで待ってください');return;}
+  const noSide=state.videos.find(v=>!v.side); if(noSide){toast(`「${noSide.title}」で自分がどちらか選んでください`);return;}
+  const checks=[...document.querySelectorAll('.chk input:checked')].map(c=>c.value);
+  const free=$('freeText').value.trim();
+  if(!checks.length&&!free){toast('見てほしいところを選ぶか、書いてください');return;}
+  if(checks.length>8&&!confirm('分析ポイントが'+checks.length+'個あります。多いと答えが長くなり、途中で切れることがあります。5〜6個にしぼるのがおすすめです。\n\nこのまま解析しますか？')) return;
+  if(!$('uname').value.trim()||!$('ugrade').value){toast('名前と学年を入れてください');$('userbox').scrollIntoView({behavior:'smooth'});return;}
+  if(!inArtifact&&!$('upass').value){toast('部の合言葉を入れてください');$('upass').focus();return;}
+  if(!inArtifact&&!/^https:\/\/script\.google\.com\//.test(GAS_URL)){toast('顧問の設定がまだです（GAS_URL）');return;}
+
+  $('btnRun').disabled=true; $('progress').classList.add('show'); $('result').style.display='none';
+  setProgress(1,15,'場面を並べています…');
+  const {system,content}=buildRequest(checks,free);
+  setProgress(2,35,'送信しています…');
+  let i=0; const rot=setInterval(()=>setProgress(3,35+Math.min(50,i*4),WAIT_MSGS[i++%WAIT_MSGS.length]),2500);
+  try{
+    const json=await callClaude(system,content);
+    clearInterval(rot); setProgress(3,100,'できました');
+    state.lastResult={json,checks,at:new Date().toISOString(),user:{name:$('uname').value.trim(),grade:$('ugrade').value},idealFrames:state.idealFrames,videos:state.videos.map(v=>({title:v.title,date:v.date,situation:v.situation,side:v.side,frames:v.frames}))};
+    renderResult(state.lastResult); saveHistory(state.lastResult);
+    setTimeout(()=>{$('progress').classList.remove('show');$('result').scrollIntoView({behavior:'smooth'})},400);
+  }catch(e){
+    clearInterval(rot); $('progress').classList.remove('show');
+    $('err').innerHTML=`<b>解析できませんでした。</b><br>${esc(e.message)}<br><button class="btn small" style="margin-top:6px" onclick="run()">もう一度試す</button>`;
+    $('err').style.display='block';
+  }
+  $('btnRun').disabled=false;
+}
+
+function buildRequest(checks,free){
+  const multi=state.videos.length>=2; const cmpType=multi?document.querySelector('input[name=cmp]:checked').value:null;
+  const cmpLabel={growth:'同じ部員の「以前 vs 今回」（成長の確認）',ideal:'「自分 vs お手本」（上級者との差）',same_day:'「1本目 vs 2本目」（同日の別の試合）'}[cmpType];
+  const idealText=$('idealText').value.trim(), yt=$('ytUrl').value.trim(), memo=$('idealMemo').value.trim();
+  const system=`あなたは明星中学校・高等学校 剣道部の指導補助AI「獅子奮迅」です。剣道六段・国際武道大学卒の八木橋先生の指導方針に沿って、部員に助言します。
+部の理念：部訓「獅子奮迅」。①文武両道 ②精神・技量の向上と礼儀作法・団体生活の習得 ③昇段・大会上位入賞（関東・全国）。中高男女合同、初心者から経験者まで約50名。
+
+守ること：
+- 相手は中高生（中1の初心者もいる）。剣道用語には短い説明を添える。命令口調ではなく、指導者が目の前で語りかける口調で。
+- 送られる画像は動画から切り出したフレームで、各動画ごとに時系列順に並んでいる。フレームの見出し（動画番号・フレーム番号・時刻）を根拠として引用すること。
+- 評価するのは「自分」だけ。相手側は評価しない。どちらが自分かは各フレームの見出しに「自分＝◯側」と書いてあるので、フレームごとに必ず確認する。撮影の途中で左右が入れ替わることがあるため、前のフレームの印象で判断しない。
+- 見えない・判断できないことは推測で断定しない。「この角度からは判断できません。横から撮った動画があるとより正確です」のように正直に書き、limitations にまとめる。
+- 安全に関わること（頭部・首への危険な動き、装備の不備、危険な転倒）に気づいたら improvements の先頭で最優先に伝える。
+- 良い点を先に、改善点と同時に必ず両方出す。改善点は「現状・なぜ問題か・どうすればよいか」。
+- frame_refs の x,y は画像内の注目位置を 0〜1 の割合（左上が 0,0）で示す。shape は circle / arrow / box のいずれか。
+- 稽古メニューは「何を・何本・どこに注意して」の形で、solo（一人でできる）/ pair（二人で）/ with_coach（先生に見てもらう）に分ける。
+- mindset は稽古中に唱えられる短い言葉で3つ以内。
+- yagihashi_message は約200字。剣道の理合や先人の教え（「打って反省、打たれて感謝」「一眼二足三胆四力」「守破離」「懸待一致」「平常心」など）を1つ引用し、この部員の動画に即した金言を述べる。厳しさはあってよいが人格を否定しない。最後は必ず前向きで、明日の稽古に行きたくなる励ましで締める。部訓「獅子奮迅」に触れて締めてもよい。
+- comparison は動画が2本以上のときだけ埋め、1本のときは空配列。成長している点を先に書く。
+- お手本の画像が送られているときは ideal_gap を必ず3件埋める（お手本がないときは空配列）。
+  お手本と本人の「同じ局面」（例：構え／打つ直前／打突の瞬間／打った後）を選んで対応づけ、
+  何がどう違うかを、体の部位と方向で具体的に書く（例「お手本は左拳がへその高さで止まっているが、あなたは胸の高さまで浮いている」）。
+  ideal には お手本はどうなっているか、yours には 本人はどうなっているか、how には その差を埋める具体的な直し方を書く。
+  ideal_frame はお手本のフレーム番号、your_ref は本人のフレームと注目位置。
+- 長さの上限（超えないこと）：good_points は3件、improvements は3件、drills は3件、mindset は3件まで。
+  detail / current / why / how はそれぞれ全角80字以内。frame_refs は各項目1〜2個まで。
+  ideal_gap は3件、ideal / yours / how はそれぞれ全角60字以内。scores は選ばれた分析ポイントのうち最大8項目まで。冗長な前置きや繰り返しを書かず、簡潔にまとめる。
+- 出力は次のJSONのみ。前後に説明やコードフェンスを付けない。
+{"headline":"一言の総評","scores":{"項目名":1-10の整数},"good_points":[{"title":"","detail":"","frame_refs":[{"video":0,"frame":0,"x":0.5,"y":0.5,"shape":"circle","label":""}]}],"improvements":[{"title":"","current":"","why":"","how":"","frame_refs":[]}],"ideal_gap":[{"point":"局面や項目","ideal":"お手本はこう","yours":"あなたはこう","how":"直し方","ideal_frame":0,"your_ref":{"video":0,"frame":0,"x":0.5,"y":0.5,"label":""}}],"comparison":[{"point":"","video_a":"","video_b":"","change":"improved|same|declined","comment":""}],"mindset":[""],"drills":[{"name":"","type":"solo|pair|with_coach","reps":"","focus":""}],"yagihashi_message":"","limitations":""}
+scores のキーは、指定された分析ポイントの名前をそのまま使う（指定がなければ主要な項目を選ぶ）。video はユーザーの動画の番号（0始まり）。frame はその動画内のフレーム番号（0始まり）。`;
+
+  const content=[];
+  let intro=`【解析の依頼】\n分析ポイント：${checks.length?checks.join('、'):'（指定なし）'}\n`;
+  if(free) intro+=`自由記述：${free}\n`;
+  if(multi) intro+=`比較モード：${cmpLabel}\n`;
+  if(idealText) intro+=`目指す剣道（本人の言葉）：${idealText}\n`;
+  if(yt) intro+=`お手本のYouTube：${yt}（映像は送れません。本人メモ：${memo||'なし'}）\n`;
+  else if(memo) intro+=`お手本で見てほしいところ：${memo}\n`;
+  content.push({type:'text',text:intro});
+  state.videos.forEach((v,vi)=>{
+    content.push({type:'text',text:`=== 動画${vi}「${v.title}」 ${v.date} ${v.situation} ／ 全${v.frames.length}フレーム ===`});
+    v.frames.forEach((f,fi)=>{ content.push({type:'text',text:`[動画${vi} フレーム${fi} ${fmt(f.t)} 自分＝${effSide(v,f)}側${f.manual?' ★本人が注目してほしい場面':''}]`}); content.push(img(f.dataUrl)); });
+  });
+  if(state.idealFrames.length){
+    content.push({type:'text',text:`=== お手本動画（比較の基準。評価対象ではない。ideal_gap で本人と対応づけて違いを述べること）${memo?' 見てほしいところ：'+memo:''} ===`});
+    state.idealFrames.forEach((f,fi)=>{content.push({type:'text',text:`[お手本 フレーム${fi} ${fmt(f.t)}]`});content.push(img(f.dataUrl));});
+  }
+  content.push({type:'text',text:'上の指示に従い、JSONのみで答えてください。'});
+  return {system,content};
+}
+const img=d=>({type:'image',source:{type:'base64',media_type:'image/jpeg',data:d.split(',')[1]}});
+
+async function callClaude(system,content){
+  const payload={model:'claude-sonnet-4-6',max_tokens:8000,system,messages:[{role:'user',content}]};
+  let data;
+  if(inArtifact){
+    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+    if(!res.ok) throw new Error(`サーバーからエラー（${res.status}）。動画が大きすぎる場合は場面を減らしてください。`);
+    data=await res.json();
+  }else{
+    // APIキーは Google Apps Script 側に置いてある。ここからは合言葉と利用者名を送るだけ。
+    const body={pass:$('upass').value,user:{name:$('uname').value.trim(),grade:$('ugrade').value},
+      videos:state.videos.map(v=>`${v.title}(${v.situation})`).join(' / '),frames:state.videos.reduce((a,v)=>a+v.frames.length,0)+state.idealFrames.length,payload};
+    let res;
+    try{ res=await fetch(GAS_URL,{method:'POST',body:JSON.stringify(body)}); }catch(e){ throw new Error('サーバーに接続できませんでした。電波の状態を確認するか、顧問に連絡してください。'); }
+    const j=await res.json().catch(()=>({ok:false,error:'返答を読めませんでした'}));
+    if(!j.ok){
+      if(j.error==='bad_pass') throw new Error('合言葉が違います。顧問に確認してください。');
+      throw new Error(`解析サーバーでエラーが起きました：${j.error||''}　動画が長い場合は場面を減らして試してください。`);
+    }
+    data=j.data;
+  }
+  const text=(data.content||[]).filter(b=>b.type==='text').map(b=>b.text).join('\n');
+  const parsed=parseLoose(text);
+  if(parsed) return parsed;
+  if(data.stop_reason==='max_tokens') throw new Error('AIの答えが長すぎて途中で切れました。分析ポイントを5つくらいに減らすか、動画を1本にして試してください。');
+  throw new Error('AIの返答を読み取れませんでした。もう一度試してください。'+(text?'（返答の冒頭：'+text.slice(0,60)+'…）':''));
+}
+
+// 途中で切れたJSONも、区切りのよい所まで戻して閉じ括弧を補い、読めるところまで読む
+function parseLoose(text){
+  let t=String(text||'').replace(/```json|```/g,'').trim();
+  const a=t.indexOf('{'); if(a<0) return null;
+  t=t.slice(a);
+  const b=t.lastIndexOf('}');
+  if(b>0){ try{ return JSON.parse(t.slice(0,b+1)); }catch(e){} }
+  // 文字列の外にある区切り位置（, や 閉じ括弧の直後）を控えながら走査する
+  const stackAt=[], cuts=[]; const stack=[];
+  let inStr=false, esc=false;
+  for(let i=0;i<t.length;i++){ const c=t[i];
+    if(inStr){ if(esc){esc=false} else if(c==='\\'){esc=true} else if(c==='"'){inStr=false; cuts.push(i+1); stackAt.push(stack.slice())} continue; }
+    if(c==='"'){inStr=true; continue}
+    if(c==='{'||c==='['){ stack.push(c==='{'?'}':']') }
+    else if(c==='}'||c===']'){ stack.pop(); cuts.push(i+1); stackAt.push(stack.slice()) }
+    else if(c===','){ cuts.push(i); stackAt.push(stack.slice()) }
+  }
+  for(let k=cuts.length-1;k>=0;k--){
+    // ここに来た時点で本文は途中で切れている
+    let fixed=t.slice(0,cuts[k]).replace(/[,:\s]+$/,'');
+    const st=stackAt[k];
+    for(let j=st.length-1;j>=0;j--) fixed+=st[j];
+    try{ const o=JSON.parse(fixed); if(o&&typeof o==='object'){ o._partial=true; return o; } }catch(e){}
+  }
+  return null;
+}
+
+/* ========= 結果の描画 ========= */
+function renderResult(r){
+  const j=r.json;
+  $('rHeadline').textContent=j.headline||'';
+  $('rMeta').textContent=r.videos.map(v=>`${v.title}（${v.date} ${v.situation}）`).join(' ／ ')+`　解析日 ${r.at.slice(0,10)}`;
+  $('rRadar').innerHTML=radar(j.scores||{});
+  $('rGood').innerHTML=(j.good_points||[]).map((g,i)=>`<div class="item good"><h3>${esc(g.title)}</h3><p>${esc(g.detail)}</p><div class="ev" data-ev="g${i}"></div></div>`).join('')||'<p class="note">（記載なし）</p>';
+  $('rImp').innerHTML=(j.improvements||[]).map((g,i)=>`<div class="item imp"><h3>${esc(g.title)}</h3><p><span class="lbl">現状</span>${esc(g.current)}</p><p><span class="lbl">なぜ</span>${esc(g.why)}</p><p><span class="lbl">どうする</span><b>${esc(g.how)}</b></p><div class="ev" data-ev="i${i}"></div></div>`).join('')||'<p class="note">（記載なし）</p>';
+  (j.good_points||[]).forEach((g,i)=>drawEvidence(r,g.frame_refs,`g${i}`,'#2E6B45'));
+  (j.improvements||[]).forEach((g,i)=>drawEvidence(r,g.frame_refs,`i${i}`,'#B8322A'));
+  renderGap(r);
+  const cmp=j.comparison||[]; $('rCmpSec').style.display=cmp.length?'block':'none';
+  if(cmp.length){ const [a,b]=r.videos; $('rCmp').innerHTML=`<table class="cmp"><tr><th>項目</th><th>${esc(a?.title||'動画A')}</th><th>${esc(b?.title||'動画B')}</th><th>変化</th></tr>${cmp.map(c=>`<tr><td><b>${esc(c.point)}</b><div class="note">${esc(c.comment)}</div></td><td>${esc(c.video_a)}</td><td>${esc(c.video_b)}</td><td><span class="chg ${esc(c.change)}">${{improved:'成長',same:'同じ',declined:'課題'}[c.change]||esc(c.change)}</span></td></tr>`).join('')}</table>`; }
+  $('rMind').innerHTML=(j.mindset||[]).map(m=>`<div>${esc(m)}</div>`).join('');
+  $('rDrills').innerHTML=(j.drills||[]).map(d=>`<div class="drill"><h3>${esc(d.name)}<span class="type">${{solo:'一人で',pair:'二人で',with_coach:'先生と'}[d.type]||esc(d.type)}</span></h3><p><span class="lbl">何本</span>${esc(d.reps)}</p><p><span class="lbl">注意点</span>${esc(d.focus)}</p></div>`).join('');
+  $('rSensei').textContent=j.yagihashi_message||'';
+  $('rLimits').innerHTML=j.limitations?`<b>この動画では判断しきれなかったこと</b><br>${esc(j.limitations)}`:'';
+  $('rLimits').style.display=j.limitations?'block':'none';
+  const pw=$('rPartial'); pw.style.display=j._partial?'block':'none';
+  if(j._partial) pw.innerHTML='<b>答えが途中で切れました。</b>読み取れたところまで表示しています。分析ポイントを5〜6個にしぼると最後まで出ます。';
+  $('result').style.display='block';
+}
+
+function drawEvidence(r,refs,key,color){
+  const box=document.querySelector(`[data-ev="${key}"]`); if(!box||!refs||!refs.length)return;
+  refs.slice(0,2).forEach(ref=>{
+    const v=r.videos[ref.video]; const f=v&&v.frames[ref.frame]; if(!f)return;
+    const c=document.createElement('canvas'); box.appendChild(c);
+    markOn(c,f.hi||f.dataUrl,ref,color);
+    c.title='タップで拡大'; c.onclick=()=>openZoom(f.hi||f.dataUrl,`${v.title} ${fmt(f.t)}${ref.label?' ― '+ref.label:''}`,ref);
+    const cap=document.createElement('div'); cap.className='cap';
+    cap.textContent=`${v.title} ${fmt(f.t)}${ref.label?' ― '+ref.label:''}（タップで拡大）`; box.appendChild(cap);
+  });
+}
+
+// 画像に丸・矢印・四角の印を描く
+function markOn(canvas,src,ref,color,cb){
+  const im=new Image();
+  im.onload=()=>{ canvas.width=im.width; canvas.height=im.height; const ctx=canvas.getContext('2d'); ctx.drawImage(im,0,0);
+    if(ref){
+      const x=(ref.x??0.5)*canvas.width, y=(ref.y??0.5)*canvas.height, R=Math.min(canvas.width,canvas.height)*0.11;
+      ctx.lineWidth=Math.max(4,canvas.width*0.006); ctx.strokeStyle=color; ctx.fillStyle=color;
+      ctx.shadowColor='rgba(0,0,0,.6)'; ctx.shadowBlur=8;
+      if(ref.shape==='box'){ ctx.strokeRect(x-R,y-R,R*2,R*2); }
+      else if(ref.shape==='arrow'){ ctx.beginPath(); ctx.moveTo(x-R*2.2,y-R*2.2); ctx.lineTo(x-R*.5,y-R*.5); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(x-R*.2,y-R*.2); ctx.lineTo(x-R*1.1,y-R*.35); ctx.lineTo(x-R*.35,y-R*1.1); ctx.closePath(); ctx.fill(); }
+      else { ctx.beginPath(); ctx.arc(x,y,R,0,Math.PI*2); ctx.stroke(); }
+      if(ref.label){ ctx.shadowBlur=0; ctx.font=`bold ${Math.round(canvas.height*0.055)}px 'Noto Sans JP',sans-serif`;
+        const w=ctx.measureText(ref.label).width+14; const lx=Math.min(Math.max(x-w/2,4),canvas.width-w-4), ly=Math.min(y+R+8,canvas.height-canvas.height*0.09);
+        ctx.fillStyle=color; ctx.fillRect(lx,ly,w,canvas.height*0.075); ctx.fillStyle='#fff'; ctx.textBaseline='middle'; ctx.fillText(ref.label,lx+7,ly+canvas.height*0.037); }
+    }
+    if(cb) cb(canvas.toDataURL('image/jpeg',0.85));
+  };
+  im.src=src;
+}
+
+// お手本と何が違うか
+function renderGap(r){
+  const gaps=r.json.ideal_gap||[]; const sec=$('rGapSec');
+  if(!gaps.length){ sec.style.display='none'; return; }
+  sec.style.display='block';
+  $('rGap').innerHTML=gaps.map((g,i)=>`<div class="gap">
+      <h3>${esc(g.point||'')}</h3>
+      <div class="pair" data-pair="${i}"></div>
+      <div class="line"><b>お手本</b><span>${esc(g.ideal||'')}</span></div>
+      <div class="line"><b>あなた</b><span>${esc(g.yours||'')}</span></div>
+      <div class="line"><b>直し方</b><span><b style="color:var(--shu)">${esc(g.how||'')}</b></span></div>
+    </div>`).join('');
+  gaps.forEach((g,i)=>{
+    const box=document.querySelector(`[data-pair="${i}"]`); if(!box) return;
+    const idf=(r.idealFrames||[])[g.ideal_frame];
+    const ref=g.your_ref||{}; const v=r.videos[ref.video||0]; const yf=v&&v.frames[ref.frame];
+    if(idf) box.appendChild(figure('mihon','お手本',idf.hi||idf.dataUrl,null,'#2E6B45','お手本 '+fmt(idf.t)));
+    if(yf)  box.appendChild(figure('yours','あなた',yf.hi||yf.dataUrl,ref,'#B8322A',`${v.title} ${fmt(yf.t)}`));
+  });
+}
+function figure(cls,label,src,ref,color,cap){
+  const fig=document.createElement('figure'); fig.className=cls;
+  fig.innerHTML=`<figcaption>${label}</figcaption>`;
+  const c=document.createElement('canvas'); c.style.width='100%'; c.style.borderRadius='4px'; c.style.background='#000'; c.style.display='block'; c.style.cursor='zoom-in';
+  markOn(c,src,ref,color); c.onclick=()=>openZoom(src,cap,ref);
+  fig.appendChild(c);
+  const d=document.createElement('div'); d.className='note'; d.style.fontSize='11px'; d.textContent=cap+'（タップで拡大）'; fig.appendChild(d);
+  return fig;
+}
+
+function radar(scores){
+  const keys=Object.keys(scores); const n=keys.length; if(n<3){ return `<div class="mincho" style="font-size:40px;text-align:center">${n?Math.round(Object.values(scores).reduce((a,b)=>a+b,0)/n*10)/10:'－'}<span style="font-size:14px">/10</span></div>`; }
+  const cx=100,cy=100,R=68; const pt=(i,r)=>{const a=-Math.PI/2+i*2*Math.PI/n;return [cx+r*Math.cos(a),cy+r*Math.sin(a)]};
+  const ring=r=>keys.map((_,i)=>pt(i,r).join(',')).join(' ');
+  const poly=keys.map((k,i)=>pt(i,R*Math.max(0,Math.min(10,+scores[k]||0))/10).join(',')).join(' ');
+  const labels=keys.map((k,i)=>{const [x,y]=pt(i,R+18);const s=k.length>5?k.slice(0,5)+'…':k;return `<text x="${x}" y="${y}" font-size="9" fill="#fff" text-anchor="middle" dominant-baseline="middle">${esc(s)}</text>`}).join('');
+  const avg=Math.round(Object.values(scores).reduce((a,b)=>a+(+b||0),0)/n*10)/10;
+  return `<svg viewBox="0 0 200 200" role="img" aria-label="レーダーチャート">${[0.25,0.5,0.75,1].map(f=>`<polygon points="${ring(R*f)}" fill="none" stroke="rgba(255,255,255,.25)"/>`).join('')}${keys.map((_,i)=>`<line x1="${cx}" y1="${cy}" x2="${pt(i,R)[0]}" y2="${pt(i,R)[1]}" stroke="rgba(255,255,255,.25)"/>`).join('')}<polygon points="${poly}" fill="rgba(184,50,42,.55)" stroke="#E8574C" stroke-width="2"/>${labels}<text x="${cx}" y="${cy+4}" font-size="16" font-weight="700" fill="#fff" text-anchor="middle" font-family="Shippori Mincho B1,serif">${avg}</text></svg>`;
+}
+
+
+/* ========= A4 フィードバックシート（1枚） ========= */
+const clip=(t,n)=>{t=String(t||'');return t.length>n?t.slice(0,n)+'…':t};
+
+// 印を描いた画像を dataURL で得る
+function markedUrl(src,ref,color){
+  return new Promise(res=>{ const c=document.createElement('canvas'); markOn(c,src,ref,color,d=>res(d)); setTimeout(()=>res(src),1500); });
+}
+
+async function buildSheet(r){
+  const j=r.json, u=r.user||{};
+  const shots=[];
+  const g0=(j.good_points||[])[0], i0=(j.improvements||[])[0];
+  const pick=(item,color)=>{ const ref=(item&&item.frame_refs||[])[0]; if(!ref)return null;
+    const v=r.videos[ref.video]; const f=v&&v.frames[ref.frame]; if(!f)return null;
+    return {src:f.hi||f.dataUrl,ref,color,cap:`${v.title} ${fmt(f.t)}${ref.label?' ― '+ref.label:''}`}; };
+  const a=pick(g0,'#2E6B45'), b=pick(i0,'#B8322A');
+  if(a) shots.push({...a,tag:'良かった場面'});
+  if(b) shots.push({...b,tag:'直したい場面'});
+  await Promise.all(shots.map(async sh=>{ sh.url=await markedUrl(sh.src,sh.ref,sh.color); }));
+
+  const gaps=(j.ideal_gap||[]).slice(0,2);
+  const drills=(j.drills||[]).slice(0,3);
+  const typeJa={solo:'一人で',pair:'二人で',with_coach:'先生と'};
+
+  $('sheet').innerHTML=`<div class="a4">
+    <div class="sh-top">
+      <div><div class="sh-logo">獅子奮迅</div><div class="sh-sub">明星中学校・高等学校 剣道部　動画フィードバック</div></div>
+      <div class="sh-who"><b>${esc(u.name||'')}</b>　${esc(u.grade||'')}<br>
+        ${esc(r.videos.map(v=>v.title+'（'+v.date+' '+v.situation+'）').join(' ／ '))}<br>
+        作成 ${r.at.slice(0,10)}</div>
+    </div>
+    <div class="sh-head">${esc(j.headline||'')}</div>
+    <div class="cols">
+      <div>
+        <div class="blk"><h4 class="g">良かったところ</h4>
+          ${(j.good_points||[]).slice(0,3).map(g=>`<div class="li"><b>${esc(g.title)}</b>　<span class="sm">${esc(clip(g.detail,70))}</span></div>`).join('')}</div>
+        <div class="blk"><h4 class="r">これからの課題</h4>
+          ${(j.improvements||[]).slice(0,3).map(g=>`<div class="li"><b>${esc(g.title)}</b>　<span class="sm">${esc(clip(g.current,45))}</span><br>
+            <span class="do">→ ${esc(clip(g.how,60))}</span></div>`).join('')}</div>
+        ${gaps.length?`<div class="blk"><h4>お手本との違い</h4>${gaps.map(g=>`<div class="li"><b>${esc(g.point)}</b><br>
+            <span class="sm">お手本：${esc(clip(g.ideal,45))}／あなた：${esc(clip(g.yours,45))}</span><br>
+            <span class="do">→ ${esc(clip(g.how,50))}</span></div>`).join('')}</div>`:''}
+      </div>
+      <div>
+        <div style="text-align:center">${radarPrint(j.scores||{})}</div>
+        ${shots.map(sh=>`<img class="shot" src="${sh.url}" alt=""><div class="shotcap">${esc(sh.tag)}：${esc(sh.cap)}</div>`).join('')}
+      </div>
+    </div>
+    <div class="blk"><h4>稽古中に唱える言葉</h4><div class="words">${(j.mindset||[]).slice(0,3).map(m=>`<div>${esc(m)}</div>`).join('')}</div></div>
+    <div class="blk"><h4>次の稽古でやること</h4><div class="drills">${drills.map(d=>`<div><b>${esc(d.name)}</b>（${esc(typeJa[d.type]||d.type||'')}）<br>
+        <span class="sm">${esc(clip(d.reps,20))}／${esc(clip(d.focus,45))}</span></div>`).join('')}</div></div>
+    <div class="sensei-box"><div class="t">AI八木橋先生からのひとこと</div><div class="m">${esc(j.yagihashi_message||'')}</div></div>
+    <div class="foot">※AIが八木橋先生の指導方針をもとに生成したものです。本物の八木橋先生の指導が最優先です。／
+      ${esc(clip(j.limitations,90))}　部訓「獅子奮迅」　打って反省、打たれて感謝</div>
+  </div>`;
+}
+
+// 印刷用レーダー（白地・黒文字）
+function radarPrint(scores){
+  const keys=Object.keys(scores).slice(0,8); const n=keys.length;
+  if(n<3){ return `<div style="font-family:'Shippori Mincho B1',serif;font-size:20pt">${n?Math.round(Object.values(scores).reduce((a,b)=>a+(+b||0),0)/n*10)/10:'－'}<span style="font-size:9pt">/10</span></div>`; }
+  const cx=100,cy=100,R=62; const pt=(i,r)=>{const a=-Math.PI/2+i*2*Math.PI/n;return [cx+r*Math.cos(a),cy+r*Math.sin(a)]};
+  const ring=r=>keys.map((_,i)=>pt(i,r).join(',')).join(' ');
+  const poly=keys.map((k,i)=>pt(i,R*Math.max(0,Math.min(10,+scores[k]||0))/10).join(',')).join(' ');
+  const labels=keys.map((k,i)=>{const [x,y]=pt(i,R+16);return `<text x="${x}" y="${y}" font-size="9" fill="#222" text-anchor="middle" dominant-baseline="middle">${esc(k.length>5?k.slice(0,5):k)}</text>`}).join('');
+  const avg=Math.round(Object.values(scores).reduce((a,b)=>a+(+b||0),0)/Object.keys(scores).length*10)/10;
+  return `<svg viewBox="0 0 200 200" style="width:56mm;height:56mm">
+    ${[0.25,0.5,0.75,1].map(f=>`<polygon points="${ring(R*f)}" fill="none" stroke="#bbb" stroke-width="1"/>`).join('')}
+    ${keys.map((_,i)=>`<line x1="${cx}" y1="${cy}" x2="${pt(i,R)[0]}" y2="${pt(i,R)[1]}" stroke="#bbb"/>`).join('')}
+    <polygon points="${poly}" fill="rgba(142,27,31,.35)" stroke="#8E1B1F" stroke-width="2"/>${labels}
+    <text x="${cx}" y="${cy+4}" font-size="15" font-weight="700" fill="#1B2A4A" text-anchor="middle" font-family="Shippori Mincho B1,serif">${avg}</text></svg>`;
+}
+
+/* ========= 保存・履歴 ========= */
+function resultText(r){
+  const j=r.json;
+  return [`【獅子奮迅 フィードバック】${r.at.slice(0,10)}`,r.videos.map(v=>`動画：${v.title}（${v.date} ${v.situation}）`).join('\n'),``,`■総評 ${j.headline}`,``,`■良かったところ`,...(j.good_points||[]).map(g=>`・${g.title}：${g.detail}`),``,`■課題`,...(j.improvements||[]).map(g=>`・${g.title}\n　現状：${g.current}\n　なぜ：${g.why}\n　どうする：${g.how}`),
+    ...(j.comparison?.length?[``,`■比較`,...j.comparison.map(c=>`・${c.point}：${c.video_a} → ${c.video_b}（${c.change}）${c.comment}`)]:[]),``,`■稽古中に唱える言葉`,(j.mindset||[]).join(' ／ '),``,`■おすすめの稽古`,...(j.drills||[]).map(d=>`・${d.name}（${d.type}）${d.reps}／${d.focus}`),``,`■AI八木橋先生から`,j.yagihashi_message,``,j.limitations?`■判断しきれなかったこと\n${j.limitations}`:''].join('\n');
+}
+async function copyText(){ if(!state.lastResult)return; try{await navigator.clipboard.writeText(resultText(state.lastResult));toast('コピーしました')}catch(e){toast('コピーできませんでした')} }
+
+function saveHistory(r){
+  try{
+    const h=JSON.parse(localStorage.getItem('sf_hist')||'[]');
+    const thumb=r.videos[0]?.frames[0]?.dataUrl; // 小さいサムネイル1枚だけ
+    h.unshift({at:r.at,titles:r.videos.map(v=>v.title),headline:r.json.headline,scores:r.json.scores,text:resultText(r),thumb:thumb?shrink(thumb):null});
+    localStorage.setItem('sf_hist',JSON.stringify(h.slice(0,12)));
+  }catch(e){}
+  renderHistory();
+}
+function shrink(d){ const c=document.createElement('canvas'); c.width=112;c.height=63; const im=new Image(); im.src=d; try{c.getContext('2d').drawImage(im,0,0,112,63);return c.toDataURL('image/jpeg',0.5)}catch(e){return null} }
+function renderHistory(){
+  let h=[]; try{h=JSON.parse(localStorage.getItem('sf_hist')||'[]')}catch(e){}
+  if(!h.length){$('hist').innerHTML='';return;}
+  $('hist').innerHTML=`<h3>これまでの解析（この端末に残っている分）</h3>`+h.map((x,i)=>`<div class="h">${x.thumb?`<img src="${x.thumb}" alt="">`:''}<div class="hh"><b>${x.at.slice(0,10)}</b> ${esc(x.headline||'')}<div class="note">${esc(x.titles.join(' / '))}</div></div><button class="btn small" data-hc="${i}">コピー</button></div>`).join('')+`<div class="row" style="margin-top:6px"><button class="btn ghost small" id="histClear">履歴を全部消す</button></div>`;
+  $('hist').querySelectorAll('[data-hc]').forEach(b=>b.onclick=async()=>{try{await navigator.clipboard.writeText(h[+b.dataset.hc].text);toast('コピーしました')}catch(e){toast('コピーできませんでした')}});
+  $('histClear').onclick=()=>{if(confirm('履歴を全部消します。よろしいですか？')){localStorage.removeItem('sf_hist');renderHistory()}};
+}
+</script>
+</body>
+</html>
